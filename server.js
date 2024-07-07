@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const moment = require('moment-timezone');
 const app = express();
 const port = 3000;
 
@@ -7,14 +8,19 @@ app.use(express.static('public'));
 
 app.get('/data', async (req, res) => {
     try {
-        const response = await axios.get('https://api.electricitymap.org/v3/carbon-intensity/latest?zone=DK-DK1', {
+        const response = await axios.get('https://api.electricitymap.org/v3/carbon-intensity/latest', {
             headers: {
-                'auth-token': 't0YlBRSVRdDFF' // Replace with your actual API key
+                'auth-token': 't0YlBRSVRdDFF', // Replace with your actual API key
             },
             params: {
-                zone: 'DK-DK1' // Replace with the appropriate zone identifier
+                zone: 'AU-NSW' // Replace with the appropriate zone identifier
             }
         });
+
+        // Convert the timestamp to AU-NSW time
+        const timestamp = moment.tz(response.data.timestamp, "Australia/Sydney");
+        response.data.timestamp = timestamp.format();
+
         console.log('API Response:', response.data); // Log the API response
         res.json(response.data);
     } catch (error) {

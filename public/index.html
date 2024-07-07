@@ -3,54 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Electricity Data</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Live Data of Carbon Intensity in NSW's Electricity (AU)</title>
+    <style>
+        body {
+            font-family: Avenir Next, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            color: #333; /* Default font color */
+        }
+        .value {
+            font-size: 48px; /* Main font size */
+            font-weight: bold;
+            padding: 20px;
+            border-radius: 50%; /* Make the shape a circle */
+            display: inline-block;
+            transition: background-color 0.5s, color 0.5s; /* Transition for color changes */
+            width: 200px;
+            height: 200px;
+            line-height: 150px; /* Center the text vertically */
+            background-image: url('path/to/your/image.jpg'); /* Path to your background image */
+            background-size: cover;
+            background-position: center;
+            color: rgb(196, 219, 214); /* Font color inside the circle */
+            position: relative;
+        }
+        .unit {
+            font-size: 18px; /* 1/4th of 48px */
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .timestamp {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
-    <h1>Live Electricity Data</h1>
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <h2>Live Data of Carbon Intensity in NSW's Electricity (AU)</h2>
+    <div id="carbonIntensity" class="value">
+        <span id="numericValue">Loading...</span>
+        <span class="unit">gCO₂eq/kWh</span>
+    </div>
+    <div id="timestamp" class="timestamp"></div>
     <script>
         async function fetchData() {
             try {
                 const response = await fetch('/data');
                 const data = await response.json();
-                console.log('Fetched Data:', data); // Log the data received
+                console.log('Fetched Data:', data);
                 return data;
             } catch (error) {
-                console.error('Error fetching data:', error); // Log any errors
+                console.error('Error fetching data:', error);
             }
         }
 
-        async function renderChart() {
+        function getColor(value) {
+            if (value <= 300) return 'green';
+            if (value <= 400) return 'yellow';
+            if (value <= 500) return 'orange';
+            return 'brown';
+        }
+
+        async function renderData() {
             const data = await fetchData();
-            if (!data) {
-                console.error('No data received'); // Log if no data is received
-                return;
-            }
-            const ctx = document.getElementById('myChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.timestamps || [], // Customize based on actual data structure
-                    datasets: [{
-                        label: 'Electricity Usage',
-                        data: data.values || [], // Customize based on actual data structure
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+            const value = data.carbonIntensity;
+            const numericValueElement = document.getElementById('numericValue');
+            const carbonIntensityElement = document.getElementById('carbonIntensity');
+            const timestampElement = document.getElementById('timestamp');
+
+            numericValueElement.textContent = value;
+            carbonIntensityElement.style.backgroundColor = getColor(value);
+
+            // Display the timestamp in AU-NSW local time
+            const localTime = moment.tz(data.timestamp, "Australia/Sydney").format('YYYY-MM-DD HH:mm:ss');
+            timestampElement.textContent = `Last updated: ${localTime} (AU-NSW Time)`;
         }
 
-        renderChart();
-        setInterval(renderChart, 60000); // Refresh data every minute
+        renderData();
+        setInterval(renderData, 60000); // Refresh data every minute
     </script>
 </body>
 </html>
