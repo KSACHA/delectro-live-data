@@ -1,0 +1,1 @@
+This app from Delectro presents live data of carbon content in NSW's electricity, using the API from electricitymaps.org. At its current state there seems to be a delay of a few hours, as the data does not match with electricitymaps online app. This needs fixing. 
