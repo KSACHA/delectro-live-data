@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const moment = require('moment-timezone');
 const cors = require('cors');
-require('dotenv').config(); // Add this line
+require('dotenv').config(); // Ensure dotenv is required
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,7 +10,6 @@ const port = process.env.PORT || 3000;
 app.use(cors({
     origin: 'https://delectro.com.au' // Replace with your actual domain
 }));
-
 app.use(express.static('public'));
 
 app.get('/data', async (req, res) => {
