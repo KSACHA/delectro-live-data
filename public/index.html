@@ -84,8 +84,8 @@
            carbonIntensityElement.style.backgroundColor = getColor(value);
 
            // Display the timestamp in AU-NSW local time
-           const localTime = moment.tz(data.timestamp, "Australia/Sydney").format('YYYY-MM-DD HH:mm:ss');
-           timestampElement.textContent = `Last updated: ${localTime} (AU-NSW Time)`;
+           const localTime = moment.tz(data.timestamp, "Australia/Sydney").format('ddd DD MMM [at] HH.mm');
+           timestampElement.textContent = `On ${localTime} (AU-NSW Time)`;
        }
 
        renderData();
