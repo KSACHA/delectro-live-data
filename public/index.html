@@ -10,7 +10,8 @@
            font-family: 'Montserrat', sans-serif;
            text-align: center;
            margin-top: 50px;
-           color: #333; /* Default font color */
+           color: rgb(196, 219, 214); /* Text color */
+           background-color: #2c2a28; /* Background color */
        }
        .value {
            font-size: 48px; /* Main font size */
@@ -70,7 +71,7 @@
            if (value <= 700) return '#682f14';
            if (value <= 800) return '#4d2509';
            if (value <= 900) return '#381d02';
-           if (value <=1000) return '#381c01';
+           if (value <= 1000) return '#381c01';
            return '#000000';
        }
 
@@ -86,7 +87,7 @@
 
            // Display the timestamp in AU-NSW local time
            const localTime = moment.tz(data.timestamp, "Australia/Sydney").format('ddd DD MMM [at] HH.mm');
-           timestampElement.textContent = `On: ${localTime} (AU-NSW Time)`;
+           timestampElement.textContent = `On ${localTime} (AU-NSW Time)`;
        }
 
        renderData();
