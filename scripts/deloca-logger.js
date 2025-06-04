@@ -23,8 +23,8 @@ const logToSupabase = async (carbonIntensity) => {
   });
 
   if (!response.ok) {
-    const text = await response.text();
-    console.error('Supabase insert error:', text);
+    const errorText = await response.text();
+    console.error('❌ Supabase insert failed:', errorText);
   }
 
   return response.ok;
@@ -32,15 +32,16 @@ const logToSupabase = async (carbonIntensity) => {
 
 const main = async () => {
   try {
-    // FORCED logging with test value
-    const logged = await logToSupabase(456);
+    // FORCE insert dummy value for debug
+    const testValue = Math.floor(Math.random() * 1000); // e.g. 457
+    const logged = await logToSupabase(testValue);
     if (logged) {
-      console.log('✔️ Test carbon intensity value logged successfully');
+      console.log(`✅ Test log inserted: carbon_intensity = ${testValue}`);
     } else {
-      console.error('❌ Failed to log test data to Supabase.');
+      console.log('❌ Test log insert failed.');
     }
   } catch (err) {
-    console.error('Error in logger:', err.message);
+    console.error('💥 Script error:', err.message);
   }
 };
 
