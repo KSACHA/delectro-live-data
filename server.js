@@ -30,6 +30,15 @@ app.get('/data', async (req, res) => {
     }
 });
 
+// New API route to serve just the carbon intensity
+app.get('/api/latest-carbon', (req, res) => {
+    if (latestCarbonIntensity !== null) {
+        res.json({ carbonIntensity: latestCarbonIntensity });
+    } else {
+        res.status(503).json({ error: 'Carbon intensity not available yet' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
