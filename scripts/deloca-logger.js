@@ -43,7 +43,8 @@ const main = async () => {
     const currentCI = await getCarbonIntensity();
     const lastCI = await getLastLoggedValue();
 
-    if (currentCI !== lastCI) {
+    // Force log entry for testing
+    if (true) {
       const logged = await logToSupabase(currentCI);
       if (logged) {
         console.log(`Logged carbon intensity: ${currentCI}`);
