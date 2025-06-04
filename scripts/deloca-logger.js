@@ -47,18 +47,20 @@ const main = async () => {
     const currentCI = await getCarbonIntensity();
     const lastCI = await getLastLoggedValue();
 
+    console.log(`Current CI: ${currentCI}, Last CI: ${lastCI}`);
+
     if (currentCI !== lastCI) {
       const logged = await logToSupabase(currentCI);
       if (logged) {
-        console.log(`Logged carbon intensity: ${currentCI}`);
+        console.log(`✅ Logged carbon intensity: ${currentCI}`);
       } else {
-        console.error('Failed to log data to Supabase.');
+        console.error('❌ Failed to log data to Supabase.');
       }
     } else {
-      console.log('No change in carbon intensity. Skipping log.');
+      console.log('ℹ️ No change in carbon intensity. Skipping log.');
     }
   } catch (err) {
-    console.error('Error in deloca-logger:', err.message);
+    console.error('🚨 Error in deloca-logger:', err.message);
   }
 };
 
