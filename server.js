@@ -31,14 +31,21 @@ app.get('/data', async (req, res) => {
 });
 
 // New API route to serve just the carbon intensity
-app.get('/api/latest-carbon', (req, res) => {
-    if (latestCarbonIntensity !== null) {
-        res.json({ carbonIntensity: latestCarbonIntensity });
-    } else {
-        res.status(503).json({ error: 'Carbon intensity not available yet' });
-    }
-});
+app.get('/api/latest-carbon', async (req, res) => {
+    try {
+        const response = await axios.get('https://api.electricitymap.org/v3/carbon-intensity/latest', {
+            headers: {
+                'auth-token': process.env.API_KEY
+            },
+            params: {
+                zone: 'AU-NSW'
+            }
+        });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+        const carbonIntensity = response.data.data.carbonIntensity;
+        res.json({ carbonIntensity });
+    } catch (error) {
+        console.error('Error in /api/latest-carbon:', error.message);
+        res.status(500).json({ error: 'Failed to fetch carbon intensity' });
+    }
 });
