@@ -42,10 +42,16 @@ app.get('/api/latest-carbon', async (req, res) => {
             }
         });
 
-        const carbonIntensity = response.data.data.carbonIntensity;
+        const carbonIntensity = response.data.carbonIntensity; // safer than .data.data
+        if (!carbonIntensity) {
+            console.error('Carbon intensity missing in response:', response.data);
+            return res.status(500).json({ error: 'Invalid response structure' });
+        }
+
         res.json({ carbonIntensity });
     } catch (error) {
         console.error('Error in /api/latest-carbon:', error.message);
         res.status(500).json({ error: 'Failed to fetch carbon intensity' });
     }
 });
+
