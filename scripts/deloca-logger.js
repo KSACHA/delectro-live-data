@@ -21,41 +21,26 @@ const logToSupabase = async (carbonIntensity) => {
       source: SOURCE,
     }),
   });
+
+  if (!response.ok) {
+    const text = await response.text();
+    console.error('Supabase insert error:', text);
+  }
+
   return response.ok;
-};
-
-const getLastLoggedValue = async () => {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/deloca_logs?order=timestamp.desc&limit=1`, {
-    headers,
-  });
-  const data = await res.json();
-  return data.length > 0 ? data[0].carbon_intensity : null;
-};
-
-const getCarbonIntensity = async () => {
-  const res = await fetch('https://delectro.com.au/api/latest-carbon');
-  const data = await res.json();
-  return data.carbonIntensity;
 };
 
 const main = async () => {
   try {
-    const currentCI = await getCarbonIntensity();
-    const lastCI = await getLastLoggedValue();
-
-    // Force log entry for testing
-    if (true) {
-      const logged = await logToSupabase(currentCI);
-      if (logged) {
-        console.log(`Logged carbon intensity: ${currentCI}`);
-      } else {
-        console.error('Failed to log data to Supabase.');
-      }
+    // FORCED logging with test value
+    const logged = await logToSupabase(456);
+    if (logged) {
+      console.log('✔️ Test carbon intensity value logged successfully');
     } else {
-      console.log('No change in carbon intensity. Skipping log.');
+      console.error('❌ Failed to log test data to Supabase.');
     }
   } catch (err) {
-    console.error('Error in deloca-logger:', err.message);
+    console.error('Error in logger:', err.message);
   }
 };
 
