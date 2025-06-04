@@ -14,23 +14,21 @@ app.get('/data', async (req, res) => {
                 'auth-token': process.env.API_KEY, // Use the environment variable for the API key
             },
             params: {
-                zone: 'AU-NSW' // Replace with the appropriate zone identifier
+                zone: 'AU-NSW'
             }
         });
 
-        // Convert the timestamp to AU-NSW time
         const timestamp = moment.tz(response.data.timestamp, "Australia/Sydney");
         response.data.timestamp = timestamp.format();
 
-        console.log('API Response:', response.data); // Log the API response
+        console.log('API Response:', response.data);
         res.json(response.data);
     } catch (error) {
-        console.error('Error retrieving data:', error); // Log any errors
+        console.error('Error retrieving data:', error);
         res.status(500).send('Error retrieving data');
     }
 });
 
-// New API route to serve just the carbon intensity
 app.get('/api/latest-carbon', async (req, res) => {
     try {
         const response = await axios.get('https://api.electricitymap.org/v3/carbon-intensity/latest', {
@@ -42,7 +40,7 @@ app.get('/api/latest-carbon', async (req, res) => {
             }
         });
 
-        const carbonIntensity = response.data.carbonIntensity; // safer than .data.data
+        const carbonIntensity = response.data.carbonIntensity;
         if (!carbonIntensity) {
             console.error('Carbon intensity missing in response:', response.data);
             return res.status(500).json({ error: 'Invalid response structure' });
@@ -55,3 +53,6 @@ app.get('/api/latest-carbon', async (req, res) => {
     }
 });
 
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
