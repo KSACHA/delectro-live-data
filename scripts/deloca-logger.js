@@ -30,15 +30,34 @@ const logToSupabase = async (carbonIntensity) => {
   return response.ok;
 };
 
+const getLastLoggedValue = async () => {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/deloca_logs?order=timestamp.desc&limit=1`, {
+    headers,
+  });
+  const data = await res.json();
+  return data.length > 0 ? data[0].carbon_intensity : null;
+};
+
+const getCarbonIntensity = async () => {
+  const res = await fetch('https://delectro.com.au/api/latest-carbon');
+  const data = await res.json();
+  return data.carbonIntensity;
+};
+
 const main = async () => {
   try {
-    // FORCE insert dummy value for debug
-    const testValue = Math.floor(Math.random() * 1000); // e.g. 457
-    const logged = await logToSupabase(testValue);
-    if (logged) {
-      console.log(`✅ Test log inserted: carbon_intensity = ${testValue}`);
+    const currentCI = await getCarbonIntensity();
+    const lastCI = await getLastLoggedValue();
+
+    if (currentCI !== lastCI) {
+      const logged = await logToSupabase(currentCI);
+      if (logged) {
+        console.log(`✅ Logged carbon intensity: ${currentCI}`);
+      } else {
+        console.error('❌ Failed to log carbon intensity.');
+      }
     } else {
-      console.log('❌ Test log insert failed.');
+      console.log(`ℹ️ No change in carbon intensity (${currentCI}). Skipped.`);
     }
   } catch (err) {
     console.error('💥 Script error:', err.message);
