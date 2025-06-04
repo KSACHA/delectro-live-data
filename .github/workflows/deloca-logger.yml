@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Run deloca-logger
-        run: node scripts/deloca-logger.js
+        run: node $GITHUB_WORKSPACE/scripts/deloca-logger.js
 
       - name: Show contents of deloca-logger.js
         run: cat scripts/deloca-logger.js
