@@ -3,7 +3,7 @@ name: Deloca Logger
 on:
   schedule:
     - cron: '*/5 * * * *'  # Runs every 5 minutes
-  workflow_dispatch:       # Also allow manual trigger from GitHub
+  workflow_dispatch:
 
 jobs:
   log-carbon-intensity:
@@ -21,18 +21,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Show contents of deloca-logger.js
-        run: cat scripts/deloca-logger.js
+      - name: Debug env variables
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL"
+          echo "SUPABASE_KEY=${SUPABASE_KEY::8}********"
 
-      - name: Run deloca-logger script
+      - name: Run deloca-logger
         run: node scripts/deloca-logger.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
-      - name: Debug env variables
-        run: |
-          echo "SUPABASE_URL=$SUPABASE_URL"
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-
+          
