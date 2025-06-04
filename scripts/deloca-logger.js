@@ -37,7 +37,7 @@ const getLastLoggedValue = async () => {
 };
 
 const getCarbonIntensity = async () => {
-  const res = await fetch('https://delectro.com.au/api/latest-carbon');
+  const res = await fetch('https://shrouded-basin-51086.herokuapp.com/api/latest-carbon');
   const data = await res.json();
   return data.carbonIntensity;
 };
