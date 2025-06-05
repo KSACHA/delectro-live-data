@@ -29,5 +29,8 @@ jobs:
           git commit -m "🤖 Keepalive ping" || echo "Nothing to commit"
 
       - name: Push changes with PAT
+        env:
+            GH_TOKEN_PUSH: ${{ secrets.GH_TOKEN_PUSH }}
         run: |
-          git push https://x-access-token:${{ secrets.GH_TOKEN_PUSH }}@github.com/${{ github.repository }}.git HEAD:main
+            git remote set-url origin https://x-access-token:${GH_TOKEN_PUSH}@github.com/${{ github.repository }}.git
+            git push origin HEAD:main
