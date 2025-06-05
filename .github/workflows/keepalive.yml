@@ -1,0 +1,22 @@
+name: Deloca Keepalive
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # ✅ Runs every 4 hours
+  workflow_dispatch:
+
+jobs:
+  keep-repo-active:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update keepalive file
+        run: |
+          date +%Y-%m-%dT%H:%M:%S > .github/keepalive.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/keepalive.txt
+          git commit -m "🤖 Keepalive ping"
+          git push
