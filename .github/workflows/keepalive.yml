@@ -1,9 +1,13 @@
 name: 🤖 Keepalive Ping
 
+
 on:
   schedule:
     - cron: '0 */4 * * *'  # Every 4 hours
   workflow_dispatch:
+
+permissions:
+    contents: write
 
 jobs:
   keepalive:
