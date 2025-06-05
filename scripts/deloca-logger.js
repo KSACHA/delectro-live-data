@@ -20,14 +20,14 @@ const headers = {
 const logToSupabase = async (carbonIntensity) => {
   const aest = moment().tz('Australia/Sydney');
   const timestamp_aest = aest.format('DD-MM-YYYY HH:mm'); // AEST string
-  const timestamp_utc = aest.utc().format(); // UTC ISO format
+  const timestamp = aest.utc().format(); // UTC ISO format
 
   const payload = {
     carbon_intensity: carbonIntensity,
     region: REGION,
     source: SOURCE,
     timestamp_aest, // Human-readable in AEST
-    timestamp_utc,  // UTC ISO for backend/analytics use
+    timestamp,  // UTC ISO for backend/analytics use
   };
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/deloca_logs`, {
