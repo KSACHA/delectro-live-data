@@ -47,7 +47,7 @@ const timestamp = moment.utc().format(); // ✅ Use direct UTC here
 
 // ✅ Fetch the last logged carbon intensity (ensures chronological integrity)
 const getLastLoggedValue = async () => {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/deloca_logs?select=carbon_intensity&order=timestamp_utc.desc&limit=1`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/deloca_logs?select=carbon_intensity&order=timestamp.desc&limit=1`, {
     headers,
   });
 
