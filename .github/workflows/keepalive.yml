@@ -1,13 +1,12 @@
 name: 🤖 Keepalive Ping
 
-
 on:
   schedule:
     - cron: '0 */4 * * *'  # Every 4 hours
   workflow_dispatch:
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
   keepalive:
@@ -16,6 +15,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Override remote to use PAT
+        env:
+          GH_TOKEN_PUSH: ${{ secrets.GH_TOKEN_PUSH }}
+        run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN_PUSH}@github.com/${{ github.repository }}.git
 
       - name: Update keepalive timestamp
         run: |
@@ -29,8 +34,5 @@ jobs:
           git commit -m "🤖 Keepalive ping" || echo "Nothing to commit"
 
       - name: Push changes with PAT
-        env:
-            GH_TOKEN_PUSH: ${{ secrets.GH_TOKEN_PUSH }}
         run: |
-            git remote set-url origin https://x-access-token:${GH_TOKEN_PUSH}@github.com/${{ github.repository }}.git
-            git push origin HEAD:main
+          git push origin HEAD:main
