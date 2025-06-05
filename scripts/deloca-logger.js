@@ -20,7 +20,7 @@ const headers = {
 const logToSupabase = async (carbonIntensity) => {
   const aest = moment().tz('Australia/Sydney');
   const timestamp_aest = aest.format('DD-MM-YYYY HH:mm'); // AEST string
-  const timestamp = aest.utc().format(); // UTC ISO format
+  const timestamp = moment.utc().format(); // UTC ISO format
 
   const payload = {
     carbon_intensity: carbonIntensity,
